@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patent Application Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            color: #0d6efd;
+            margin-bottom: 20px;
+        }
+        .inventor-entry, .applicant-entry {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .fee-display {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Patent Application Form</h1>
+        <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+        <form action="/submit" method="POST" id="patentForm">
+            <!-- Type of Application Section -->
+            <div class="form-section">
+                <h2 class="section-title">Type of Application</h2>
+                <div class="mb-3">
+                    <!-- Main Application Types -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicationType" value="Ordinary" required>
+                        <label class="form-check-label">Ordinary</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicationType" value="Convention">
+                        <label class="form-check-label">Convention</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicationType" value="PCT-NP">
+                        <label class="form-check-label">PCT-NP</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicationType" value="PPH">
+                        <label class="form-check-label">PPH</label>
+                    </div>
+                </div>
+
+                <!-- Sub-options -->
+                <div id="subOptions" style="display: none;">
+                    <h4 class="mt-3 mb-2">Sub-options</h4>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="subOption" value="divisional">
+                        <label class="form-check-label">Divisional</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="subOption" value="addition">
+                        <label class="form-check-label">Patent of Addition</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category of Applicant Section -->
+            <div class="form-section">
+                <h2 class="section-title">Category of Applicant</h2>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicantCategory" value="Natural Person" required>
+                        <label class="form-check-label">Natural Person</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicantCategory" value="Other Than Natural Person">
+                        <label class="form-check-label">Other Than Natural Person</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicantCategory" value="Educational institution">
+                        <label class="form-check-label">Educational institution</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicantCategory" value="Small Entity">
+                        <label class="form-check-label">Small Entity</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicantCategory" value="Start-Up">
+                        <label class="form-check-label">Start-Up</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="applicantCategory" value="Others">
+                        <label class="form-check-label">Others</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventors Same as Applicants Section -->
+            <div class="form-section">
+                <h2 class="section-title">Inventors Same as Applicants</h2>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="inventorsSameAsApplicants" value="Yes" required>
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="inventorsSameAsApplicants" value="No">
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Declarations Section -->
+            <div class="form-section">
+                <h2 class="section-title">Declarations</h2>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationPossession" value="Yes">
+                        <label class="form-check-label">I am/We are in possession of the above-mentioned invention.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationSpecification" value="Yes">
+                        <label class="form-check-label">The provisional/complete specification relating to the invention is filed with this application.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationBiological" value="Yes">
+                        <label class="form-check-label">The invention as disclosed in the specification uses the biological material from India and the necessary permission from the competent authority shall be submitted by me/us before the grant of patent to me/us.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationNoObjections" value="Yes">
+                        <label class="form-check-label">There is no lawful ground of objections to the grant of the Patent to me/us.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationTrueInventors" value="Yes">
+                        <label class="form-check-label">We are the true & first inventors.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationAssignee" value="Yes">
+                        <label class="form-check-label">We are the assignee of true & first inventors.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationConvention" value="Yes">
+                        <label class="form-check-label">The application or each of the applications, particulars of which are given in Paragraph-8, was the first application in convention country in respect of our invention.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationPriority" value="Yes">
+                        <label class="form-check-label">We claim the priority from the above-mentioned application filed in convention country and state that no application for protection in respect of the invention had been made in a convention country before that date by us or by any person from which we derive the title.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationPCT" value="Yes">
+                        <label class="form-check-label">My/Our application in India is based on international application under Patent Cooperation Treaty (PCT) as mentioned in Paragraph-9.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationDivisional" value="Yes">
+                        <label class="form-check-label">The application is divided out of my/our application particulars of which is given in Paragraph-10 and pray that this application may be treated as deemed to have been filed on the date of filing of the original application under section 16 of the Act.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="declarationAddition" value="Yes">
+                        <label class="form-check-label">The said invention is an improvement in or modification of the invention particulars of which are given in Paragraph-11.</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attachments Section -->
+            <div class="form-section">
+                <h2 class="section-title">Attachments</h2>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentComplete" value="Yes">
+                        <label class="form-check-label">Complete specification</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentSequence" value="Yes">
+                        <label class="form-check-label">Sequence listing in electronic form</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentDrawings" value="Yes">
+                        <label class="form-check-label">Drawings</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentPriority" value="Yes">
+                        <label class="form-check-label">Priority document</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentTranslation" value="Yes">
+                        <label class="form-check-label">Translation of priority document</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentForm3" value="Yes">
+                        <label class="form-check-label">Statement and Undertaking on Form 3</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentForm5" value="Yes">
+                        <label class="form-check-label">Declaration of Inventorship on Form 5</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attachmentPower" value="Yes">
+                        <label class="form-check-label">Power of Authority</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Convention Application Details Section -->
+            <div class="form-section" id="conventionDetails" style="display: none;">
+                <h2 class="section-title">Convention Application Details</h2>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Country</label>
+                            <input type="text" class="form-control" name="conventionCountry">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Application Number</label>
+                            <input type="text" class="form-control" name="conventionNumber">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Filing Date</label>
+                            <input type="date" class="form-control" name="conventionDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Name of the Applicant</label>
+                            <input type="text" class="form-control" name="conventionApplicant">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="conventionTitle">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">IPC</label>
+                            <input type="text" class="form-control" name="conventionIPC">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PCT Application Details Section -->
+            <div class="form-section" id="pctDetails" style="display: none;">
+                <h2 class="section-title">PCT Application Details</h2>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">International Application Number</label>
+                            <input type="text" class="form-control" name="pctNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">International Filing Date</label>
+                            <input type="date" class="form-control" name="pctDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divisional Application Details Section -->
+            <div class="form-section" id="divisionalDetails" style="display: none;">
+                <h2 class="section-title">Divisional Application Details</h2>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Original Application Number</label>
+                            <input type="text" class="form-control" name="divisionalNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Filing of Original Application</label>
+                            <input type="date" class="form-control" name="divisionalDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patent of Addition Details Section -->
+            <div class="form-section" id="additionDetails" style="display: none;">
+                <h2 class="section-title">Patent of Addition Details</h2>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Main Application/Patent Number</label>
+                            <input type="text" class="form-control" name="additionNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Filing of Main Application</label>
+                            <input type="date" class="form-control" name="additionDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventor Details Section -->
+            <div class="form-section">
+                <h2 class="section-title">Inventor Details</h2>
+                <div id="inventorsList">
+                    <div class="inventor-entry">
+                        <div class="row">
+                            <div class="col-md-11">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="inventors[0][name]" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="inventors[0][gender]" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Others">Others</option>
+                                    <option value="Prefer not to disclose">Prefer not to disclose</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nationality</label>
+                                <select class="form-select" name="inventors[0][nationality]" required>
+                                    <option value="">Select Nationality</option>
+                                            <option value="Afghan">Afghan</option>
+                                            <option value="Albanian">Albanian</option>
+                                            <option value="Algerian">Algerian</option>
+                                            <option value="American">American</option>
+                                            <option value="Andorran">Andorran</option>
+                                            <option value="Angolan">Angolan</option>
+                                            <option value="Argentine">Argentine</option>
+                                            <option value="Armenian">Armenian</option>
+                                            <option value="Australian">Australian</option>
+                                            <option value="Austrian">Austrian</option>
+                                            <option value="Azerbaijani">Azerbaijani</option>
+                                            <option value="Bahamian">Bahamian</option>
+                                            <option value="Bahraini">Bahraini</option>
+                                            <option value="Bangladeshi">Bangladeshi</option>
+                                            <option value="Barbadian">Barbadian</option>
+                                            <option value="Belarusian">Belarusian</option>
+                                            <option value="Belgian">Belgian</option>
+                                            <option value="Belizean">Belizean</option>
+                                            <option value="Beninese">Beninese</option>
+                                            <option value="Bhutanese">Bhutanese</option>
+                                            <option value="Bolivian">Bolivian</option>
+                                            <option value="Bosnian">Bosnian</option>
+                                            <option value="Botswanan">Botswanan</option>
+                                            <option value="Brazilian">Brazilian</option>
+                                            <option value="Bruneian">Bruneian</option>
+                                            <option value="Bulgarian">Bulgarian</option>
+                                            <option value="Burkinabé">Burkinabé</option>
+                                            <option value="Burmese">Burmese</option>
+                                            <option value="Burundian">Burundian</option>
+                                            <option value="Cambodian">Cambodian</option>
+                                            <option value="Cameroonian">Cameroonian</option>
+                                            <option value="Canadian">Canadian</option>
+                                            <option value="Cape Verdean">Cape Verdean</option>
+                                            <option value="Central African">Central African</option>
+                                            <option value="Chadian">Chadian</option>
+                                            <option value="Chilean">Chilean</option>
+                                            <option value="Chinese">Chinese</option>
+                                            <option value="Colombian">Colombian</option>
+                                            <option value="Comoran">Comoran</option>
+                                            <option value="Congolese">Congolese</option>
+                                            <option value="Costa Rican">Costa Rican</option>
+                                            <option value="Croatian">Croatian</option>
+                                            <option value="Cuban">Cuban</option>
+                                            <option value="Cypriot">Cypriot</option>
+                                            <option value="Czech">Czech</option>
+                                            <option value="Danish">Danish</option>
+                                            <option value="Djiboutian">Djiboutian</option>
+                                            <option value="Dominican">Dominican</option>
+                                            <option value="Dutch">Dutch</option>
+                                            <option value="East Timorese">East Timorese</option>
+                                            <option value="Ecuadorean">Ecuadorean</option>
+                                            <option value="Egyptian">Egyptian</option>
+                                            <option value="Emirati">Emirati</option>
+                                            <option value="English">English</option>
+                                            <option value="Equatorial Guinean">Equatorial Guinean</option>
+                                            <option value="Eritrean">Eritrean</option>
+                                            <option value="Estonian">Estonian</option>
+                                            <option value="Ethiopian">Ethiopian</option>
+                                            <option value="Fijian">Fijian</option>
+                                            <option value="Finnish">Finnish</option>
+                                            <option value="French">French</option>
+                                            <option value="Gabonese">Gabonese</option>
+                                            <option value="Gambian">Gambian</option>
+                                            <option value="Georgian">Georgian</option>
+                                            <option value="German">German</option>
+                                            <option value="Ghanaian">Ghanaian</option>
+                                            <option value="Greek">Greek</option>
+                                            <option value="Grenadian">Grenadian</option>
+                                            <option value="Guatemalan">Guatemalan</option>
+                                            <option value="Guinean">Guinean</option>
+                                            <option value="Guinea-Bissauan">Guinea-Bissauan</option>
+                                            <option value="Guyanese">Guyanese</option>
+                                            <option value="Haitian">Haitian</option>
+                                            <option value="Honduran">Honduran</option>
+                                            <option value="Hungarian">Hungarian</option>
+                                            <option value="Icelandic">Icelandic</option>
+                                    <option value="Indian">Indian</option>
+                                            <option value="Indonesian">Indonesian</option>
+                                            <option value="Iranian">Iranian</option>
+                                            <option value="Iraqi">Iraqi</option>
+                                            <option value="Irish">Irish</option>
+                                            <option value="Israeli">Israeli</option>
+                                            <option value="Italian">Italian</option>
+                                            <option value="Ivorian">Ivorian</option>
+                                            <option value="Jamaican">Jamaican</option>
+                                            <option value="Japanese">Japanese</option>
+                                            <option value="Jordanian">Jordanian</option>
+                                            <option value="Kazakhstani">Kazakhstani</option>
+                                            <option value="Kenyan">Kenyan</option>
+                                            <option value="Kiribati">Kiribati</option>
+                                            <option value="Kuwaiti">Kuwaiti</option>
+                                            <option value="Kyrgyzstani">Kyrgyzstani</option>
+                                            <option value="Laotian">Laotian</option>
+                                            <option value="Latvian">Latvian</option>
+                                            <option value="Lebanese">Lebanese</option>
+                                            <option value="Liberian">Liberian</option>
+                                            <option value="Libyan">Libyan</option>
+                                            <option value="Liechtensteiner">Liechtensteiner</option>
+                                            <option value="Lithuanian">Lithuanian</option>
+                                            <option value="Luxembourgish">Luxembourgish</option>
+                                            <option value="Macedonian">Macedonian</option>
+                                            <option value="Malagasy">Malagasy</option>
+                                            <option value="Malawian">Malawian</option>
+                                            <option value="Malaysian">Malaysian</option>
+                                            <option value="Maldivian">Maldivian</option>
+                                            <option value="Malian">Malian</option>
+                                            <option value="Maltese">Maltese</option>
+                                            <option value="Marshallese">Marshallese</option>
+                                            <option value="Mauritanian">Mauritanian</option>
+                                            <option value="Mauritian">Mauritian</option>
+                                            <option value="Mexican">Mexican</option>
+                                            <option value="Micronesian">Micronesian</option>
+                                            <option value="Moldovan">Moldovan</option>
+                                            <option value="Monacan">Monacan</option>
+                                            <option value="Mongolian">Mongolian</option>
+                                            <option value="Montenegrin">Montenegrin</option>
+                                            <option value="Moroccan">Moroccan</option>
+                                            <option value="Mozambican">Mozambican</option>
+                                            <option value="Namibian">Namibian</option>
+                                            <option value="Nauruan">Nauruan</option>
+                                            <option value="Nepalese">Nepalese</option>
+                                            <option value="New Zealander">New Zealander</option>
+                                            <option value="Nicaraguan">Nicaraguan</option>
+                                            <option value="Nigerien">Nigerien</option>
+                                            <option value="Nigerian">Nigerian</option>
+                                            <option value="North Korean">North Korean</option>
+                                            <option value="Norwegian">Norwegian</option>
+                                            <option value="Omani">Omani</option>
+                                            <option value="Pakistani">Pakistani</option>
+                                            <option value="Palauan">Palauan</option>
+                                            <option value="Palestinian">Palestinian</option>
+                                            <option value="Panamanian">Panamanian</option>
+                                            <option value="Papua New Guinean">Papua New Guinean</option>
+                                            <option value="Paraguayan">Paraguayan</option>
+                                            <option value="Peruvian">Peruvian</option>
+                                            <option value="Philippine">Philippine</option>
+                                            <option value="Polish">Polish</option>
+                                            <option value="Portuguese">Portuguese</option>
+                                            <option value="Qatari">Qatari</option>
+                                            <option value="Romanian">Romanian</option>
+                                            <option value="Russian">Russian</option>
+                                            <option value="Rwandan">Rwandan</option>
+                                            <option value="Saint Lucian">Saint Lucian</option>
+                                            <option value="Salvadoran">Salvadoran</option>
+                                            <option value="Samoan">Samoan</option>
+                                            <option value="San Marinese">San Marinese</option>
+                                            <option value="Sao Tomean">Sao Tomean</option>
+                                            <option value="Saudi">Saudi</option>
+                                            <option value="Scottish">Scottish</option>
+                                            <option value="Senegalese">Senegalese</option>
+                                            <option value="Serbian">Serbian</option>
+                                            <option value="Seychellois">Seychellois</option>
+                                            <option value="Sierra Leonean">Sierra Leonean</option>
+                                            <option value="Singaporean">Singaporean</option>
+                                            <option value="Slovak">Slovak</option>
+                                            <option value="Slovenian">Slovenian</option>
+                                            <option value="Solomon Islander">Solomon Islander</option>
+                                            <option value="Somali">Somali</option>
+                                            <option value="South African">South African</option>
+                                            <option value="South Korean">South Korean</option>
+                                            <option value="Spanish">Spanish</option>
+                                            <option value="Sri Lankan">Sri Lankan</option>
+                                            <option value="Sudanese">Sudanese</option>
+                                            <option value="Surinamese">Surinamese</option>
+                                            <option value="Swazi">Swazi</option>
+                                            <option value="Swedish">Swedish</option>
+                                            <option value="Swiss">Swiss</option>
+                                            <option value="Syrian">Syrian</option>
+                                            <option value="Taiwanese">Taiwanese</option>
+                                            <option value="Tajikistani">Tajikistani</option>
+                                            <option value="Tanzanian">Tanzanian</option>
+                                            <option value="Thai">Thai</option>
+                                            <option value="Togolese">Togolese</option>
+                                            <option value="Tongan">Tongan</option>
+                                            <option value="Trinidadian">Trinidadian</option>
+                                            <option value="Tunisian">Tunisian</option>
+                                            <option value="Turkish">Turkish</option>
+                                            <option value="Turkmen">Turkmen</option>
+                                            <option value="Tuvaluan">Tuvaluan</option>
+                                            <option value="Ugandan">Ugandan</option>
+                                            <option value="Ukrainian">Ukrainian</option>
+                                            <option value="Uruguayan">Uruguayan</option>
+                                            <option value="Uzbekistani">Uzbekistani</option>
+                                            <option value="Vanuatuan">Vanuatuan</option>
+                                            <option value="Venezuelan">Venezuelan</option>
+                                            <option value="Vietnamese">Vietnamese</option>
+                                            <option value="Welsh">Welsh</option>
+                                            <option value="Yemeni">Yemeni</option>
+                                            <option value="Zambian">Zambian</option>
+                                            <option value="Zimbabwean">Zimbabwean</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Residency</label>
+                                        <select class="form-select" name="inventors[0][residency]" required onchange="toggleStateField(0, this.value)">
+                                    <option value="">Select Residency</option>
+                                    <option value="India">India</option>
+                                            <option value="Afghanistan">Afghanistan</option>
+                                            <option value="Albania">Albania</option>
+                                            <option value="Algeria">Algeria</option>
+                                            <option value="Andorra">Andorra</option>
+                                            <option value="Angola">Angola</option>
+                                            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                                            <option value="Argentina">Argentina</option>
+                                            <option value="Armenia">Armenia</option>
+                                            <option value="Australia">Australia</option>
+                                            <option value="Austria">Austria</option>
+                                            <option value="Azerbaijan">Azerbaijan</option>
+                                            <option value="Bahamas">Bahamas</option>
+                                            <option value="Bahrain">Bahrain</option>
+                                            <option value="Bangladesh">Bangladesh</option>
+                                            <option value="Barbados">Barbados</option>
+                                            <option value="Belarus">Belarus</option>
+                                            <option value="Belgium">Belgium</option>
+                                            <option value="Belize">Belize</option>
+                                            <option value="Benin">Benin</option>
+                                            <option value="Bhutan">Bhutan</option>
+                                            <option value="Bolivia">Bolivia</option>
+                                            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                                            <option value="Botswana">Botswana</option>
+                                            <option value="Brazil">Brazil</option>
+                                            <option value="Brunei">Brunei</option>
+                                            <option value="Bulgaria">Bulgaria</option>
+                                            <option value="Burkina Faso">Burkina Faso</option>
+                                            <option value="Burundi">Burundi</option>
+                                            <option value="Cabo Verde">Cabo Verde</option>
+                                            <option value="Cambodia">Cambodia</option>
+                                            <option value="Cameroon">Cameroon</option>
+                                            <option value="Canada">Canada</option>
+                                            <option value="Central African Republic">Central African Republic</option>
+                                            <option value="Chad">Chad</option>
+                                            <option value="Chile">Chile</option>
+                                            <option value="China">China</option>
+                                            <option value="Colombia">Colombia</option>
+                                            <option value="Comoros">Comoros</option>
+                                            <option value="Congo (Congo-Brazzaville)">Congo (Congo-Brazzaville)</option>
+                                            <option value="Costa Rica">Costa Rica</option>
+                                            <option value="Croatia">Croatia</option>
+                                            <option value="Cuba">Cuba</option>
+                                            <option value="Cyprus">Cyprus</option>
+                                            <option value="Czech Republic">Czech Republic</option>
+                                            <option value="Democratic Republic of the Congo">Democratic Republic of the Congo</option>
+                                            <option value="Denmark">Denmark</option>
+                                            <option value="Djibouti">Djibouti</option>
+                                            <option value="Dominica">Dominica</option>
+                                            <option value="Dominican Republic">Dominican Republic</option>
+                                            <option value="Ecuador">Ecuador</option>
+                                            <option value="Egypt">Egypt</option>
+                                            <option value="El Salvador">El Salvador</option>
+                                            <option value="Equatorial Guinea">Equatorial Guinea</option>
+                                            <option value="Eritrea">Eritrea</option>
+                                            <option value="Estonia">Estonia</option>
+                                            <option value="Eswatini">Eswatini</option>
+                                            <option value="Ethiopia">Ethiopia</option>
+                                            <option value="Fiji">Fiji</option>
+                                            <option value="Finland">Finland</option>
+                                            <option value="France">France</option>
+                                            <option value="Gabon">Gabon</option>
+                                            <option value="Gambia">Gambia</option>
+                                            <option value="Georgia">Georgia</option>
+                                            <option value="Germany">Germany</option>
+                                            <option value="Ghana">Ghana</option>
+                                            <option value="Greece">Greece</option>
+                                            <option value="Grenada">Grenada</option>
+                                            <option value="Guatemala">Guatemala</option>
+                                            <option value="Guinea">Guinea</option>
+                                            <option value="Guinea-Bissau">Guinea-Bissau</option>
+                                            <option value="Guyana">Guyana</option>
+                                            <option value="Haiti">Haiti</option>
+                                            <option value="Honduras">Honduras</option>
+                                            <option value="Hungary">Hungary</option>
+                                            <option value="Iceland">Iceland</option>
+                                            <option value="India">India</option>
+                                            <option value="Indonesia">Indonesia</option>
+                                            <option value="Iran">Iran</option>
+                                            <option value="Iraq">Iraq</option>
+                                            <option value="Ireland">Ireland</option>
+                                            <option value="Israel">Israel</option>
+                                            <option value="Italy">Italy</option>
+                                            <option value="Ivory Coast">Ivory Coast</option>
+                                            <option value="Jamaica">Jamaica</option>
+                                            <option value="Japan">Japan</option>
+                                            <option value="Jordan">Jordan</option>
+                                            <option value="Kazakhstan">Kazakhstan</option>
+                                            <option value="Kenya">Kenya</option>
+                                            <option value="Kiribati">Kiribati</option>
+                                            <option value="Kuwait">Kuwait</option>
+                                            <option value="Kyrgyzstan">Kyrgyzstan</option>
+                                            <option value="Laos">Laos</option>
+                                            <option value="Latvia">Latvia</option>
+                                            <option value="Lebanon">Lebanon</option>
+                                            <option value="Lesotho">Lesotho</option>
+                                            <option value="Liberia">Liberia</option>
+                                            <option value="Libya">Libya</option>
+                                            <option value="Liechtenstein">Liechtenstein</option>
+                                            <option value="Lithuania">Lithuania</option>
+                                            <option value="Luxembourg">Luxembourg</option>
+                                            <option value="Madagascar">Madagascar</option>
+                                            <option value="Malawi">Malawi</option>
+                                            <option value="Malaysia">Malaysia</option>
+                                            <option value="Maldives">Maldives</option>
+                                            <option value="Mali">Mali</option>
+                                            <option value="Malta">Malta</option>
+                                            <option value="Marshall Islands">Marshall Islands</option>
+                                            <option value="Mauritania">Mauritania</option>
+                                            <option value="Mauritius">Mauritius</option>
+                                            <option value="Mexico">Mexico</option>
+                                            <option value="Micronesia">Micronesia</option>
+                                            <option value="Moldova">Moldova</option>
+                                            <option value="Monaco">Monaco</option>
+                                            <option value="Mongolia">Mongolia</option>
+                                            <option value="Montenegro">Montenegro</option>
+                                            <option value="Morocco">Morocco</option>
+                                            <option value="Mozambique">Mozambique</option>
+                                            <option value="Myanmar">Myanmar</option>
+                                            <option value="Namibia">Namibia</option>
+                                            <option value="Nauru">Nauru</option>
+                                            <option value="Nepal">Nepal</option>
+                                            <option value="Netherlands">Netherlands</option>
+                                            <option value="New Zealand">New Zealand</option>
+                                            <option value="Nicaragua">Nicaragua</option>
+                                            <option value="Niger">Niger</option>
+                                            <option value="Nigeria">Nigeria</option>
+                                            <option value="North Korea">North Korea</option>
+                                            <option value="North Macedonia">North Macedonia</option>
+                                            <option value="Norway">Norway</option>
+                                            <option value="Oman">Oman</option>
+                                            <option value="Pakistan">Pakistan</option>
+                                            <option value="Palau">Palau</option>
+                                            <option value="Palestine">Palestine</option>
+                                            <option value="Panama">Panama</option>
+                                            <option value="Papua New Guinea">Papua New Guinea</option>
+                                            <option value="Paraguay">Paraguay</option>
+                                            <option value="Peru">Peru</option>
+                                            <option value="Philippines">Philippines</option>
+                                            <option value="Poland">Poland</option>
+                                            <option value="Portugal">Portugal</option>
+                                            <option value="Qatar">Qatar</option>
+                                            <option value="Republic of the Congo">Republic of the Congo</option>
+                                            <option value="Romania">Romania</option>
+                                            <option value="Russia">Russia</option>
+                                            <option value="Rwanda">Rwanda</option>
+                                            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                                            <option value="Saint Lucia">Saint Lucia</option>
+                                            <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+                                            <option value="Samoa">Samoa</option>
+                                            <option value="San Marino">San Marino</option>
+                                            <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                                            <option value="Saudi Arabia">Saudi Arabia</option>
+                                            <option value="Senegal">Senegal</option>
+                                            <option value="Serbia">Serbia</option>
+                                            <option value="Seychelles">Seychelles</option>
+                                            <option value="Sierra Leone">Sierra Leone</option>
+                                            <option value="Singapore">Singapore</option>
+                                            <option value="Slovakia">Slovakia</option>
+                                            <option value="Slovenia">Slovenia</option>
+                                            <option value="Solomon Islands">Solomon Islands</option>
+                                            <option value="Somalia">Somalia</option>
+                                            <option value="South Africa">South Africa</option>
+                                            <option value="South Korea">South Korea</option>
+                                            <option value="South Sudan">South Sudan</option>
+                                            <option value="Spain">Spain</option>
+                                            <option value="Sri Lanka">Sri Lanka</option>
+                                            <option value="Sudan">Sudan</option>
+                                            <option value="Suriname">Suriname</option>
+                                            <option value="Sweden">Sweden</option>
+                                            <option value="Switzerland">Switzerland</option>
+                                            <option value="Syria">Syria</option>
+                                            <option value="Taiwan">Taiwan</option>
+                                            <option value="Tajikistan">Tajikistan</option>
+                                            <option value="Tanzania">Tanzania</option>
+                                            <option value="Thailand">Thailand</option>
+                                            <option value="Togo">Togo</option>
+                                            <option value="Tonga">Tonga</option>
+                                            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                                            <option value="Tunisia">Tunisia</option>
+                                            <option value="Turkey">Turkey</option>
+                                            <option value="Turkmenistan">Turkmenistan</option>
+                                            <option value="Tuvalu">Tuvalu</option>
+                                            <option value="Uganda">Uganda</option>
+                                            <option value="Ukraine">Ukraine</option>
+                                            <option value="United Arab Emirates">United Arab Emirates</option>
+                                            <option value="United Kingdom">United Kingdom</option>
+                                            <option value="United States">United States</option>
+                                            <option value="Uruguay">Uruguay</option>
+                                            <option value="Uzbekistan">Uzbekistan</option>
+                                            <option value="Vanuatu">Vanuatu</option>
+                                            <option value="Vatican City">Vatican City</option>
+                                            <option value="Venezuela">Venezuela</option>
+                                            <option value="Vietnam">Vietnam</option>
+                                            <option value="Yemen">Yemen</option>
+                                            <option value="Zambia">Zambia</option>
+                                            <option value="Zimbabwe">Zimbabwe</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3" id="stateField0" style="display: none;">
+                                <label class="form-label">State</label>
+                                <select class="form-select" name="inventors[0][state]">
+                                    <option value="">Select State</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Tripura">Tripura</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" name="inventors[0][address]" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeInventor(this)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="addInventor()">Add Another Inventor</button>
+            </div>
+
+            <!-- Pre-Configured Applicant Section -->
+            <div class="form-section">
+                <h2 class="section-title">Applicant Details</h2>
+                <div class="mb-3">
+                    <label class="form-label">Do you want to preconfigure the applicant?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="preConfigureApplicant" value="Yes">
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="preConfigureApplicant" value="No">
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+                <div id="preConfiguredApplicantForm" style="display: none;">
+                    <div id="applicantsList">
+                        <div class="applicant-entry">
+                            <div class="row">
+                                <div class="col-md-11">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Name</label>
+                                            <input type="text" class="form-control" name="preConfiguredApplicant[0][name]">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Category</label>
+                                            <select class="form-select" name="preConfiguredApplicant[0][category]" onchange="updateFees()">
+                                <option value="">Select Category</option>
+                                <option value="Human">Human</option>
+                                <option value="Startup">Startup</option>
+                                <option value="Small">Small</option>
+                                <option value="Large">Large</option>
+                                <option value="Education Institute">Education Institute</option>
+                                <option value="Govt Entity">Govt Entity</option>
+                                <option value="Woman">Woman</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Address</label>
+                                            <textarea class="form-control" name="preConfiguredApplicant[0][address]"></textarea>
+                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeApplicant(this)" style="display: none;">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addApplicant()">Add Another Applicant</button>
+                </div>
+                <div id="manualApplicantForm" style="display: none;">
+                    <div class="mb-3">
+                        <label class="form-label">Select Applicant Type</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="applicantType" value="inventor" onchange="toggleApplicantType(this.value)">
+                            <label class="form-check-label">Select from Inventors</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="applicantType" value="manual" onchange="toggleApplicantType(this.value)">
+                            <label class="form-check-label">Enter Manually</label>
+                        </div>
+                    </div>
+                    <div id="inventorApplicantForm" style="display: none;">
+                        <div id="inventorApplicantsList">
+                            <div class="applicant-entry">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Select Inventor</label>
+                                                <select class="form-select inventor-select" name="inventorApplicant[0][inventor]" required onchange="populateInventorDetails(this, 0)">
+                                                    <option value="">Select Inventor</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Category</label>
+                                                <input type="text" class="form-control" name="inventorApplicant[0][category]" value="Human" readonly>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Name</label>
+                                                <input type="text" class="form-control" name="inventorApplicant[0][name]" readonly>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Nationality</label>
+                                                <input type="text" class="form-control" name="inventorApplicant[0][nationality]" readonly>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Residency</label>
+                                                <input type="text" class="form-control" name="inventorApplicant[0][residency]" readonly>
+                                            </div>
+                                            <div class="col-md-6 mb-3" id="inventorApplicantStateField0" style="display: none;">
+                                                <label class="form-label">State</label>
+                                                <input type="text" class="form-control" name="inventorApplicant[0][state]" readonly>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Address</label>
+                                                <textarea class="form-control" name="inventorApplicant[0][address]" readonly></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeInventorApplicant(this)" style="display: none;">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-secondary" onclick="addInventorApplicant()">Add Another Inventor as Applicant</button>
+                            <button type="button" class="btn btn-secondary ms-2" onclick="switchToManualEntry()">Add Other Applicant</button>
+                        </div>
+                    </div>
+                    <div id="manualApplicantFormFields" style="display: none;">
+                        <div id="manualApplicantsList">
+                            <div class="applicant-entry">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Name</label>
+                                                <input type="text" class="form-control" name="manualApplicant[0][name]" value="">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Category</label>
+                                                <select class="form-select" name="manualApplicant[0][category]" required>
+                                                    <option value="">Select Category</option>
+                                                    <option value="Natural Person">Natural Person</option>
+                                                    <option value="Small Entity">Small Entity</option>
+                                                    <option value="Start-Up">Start-Up</option>
+                                                    <option value="Educational institution">Educational institution</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Nationality</label>
+                                                <select class="form-select" name="manualApplicant[0][nationality]">
+                                                    <option value="">Select Nationality</option>
+                                                    <option value="Indian">Indian</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Residency</label>
+                                                <select class="form-select" name="manualApplicant[0][residency]" onchange="toggleApplicantStateField(0, this.value)">
+                                                    <option value="">Select Residency</option>
+                                                    <option value="India">India</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3" id="applicantStateField0" style="display: none;">
+                                                <label class="form-label">State</label>
+                                                <select class="form-select" name="manualApplicant[0][state]">
+                                                    <option value="">Select State</option>
+                                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                    <option value="Assam">Assam</option>
+                                                    <option value="Bihar">Bihar</option>
+                                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                                    <option value="Goa">Goa</option>
+                                                    <option value="Gujarat">Gujarat</option>
+                                                    <option value="Haryana">Haryana</option>
+                                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                    <option value="Jharkhand">Jharkhand</option>
+                                                    <option value="Karnataka">Karnataka</option>
+                                                    <option value="Kerala">Kerala</option>
+                                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                    <option value="Maharashtra">Maharashtra</option>
+                                                    <option value="Manipur">Manipur</option>
+                                                    <option value="Meghalaya">Meghalaya</option>
+                                                    <option value="Mizoram">Mizoram</option>
+                                                    <option value="Nagaland">Nagaland</option>
+                                                    <option value="Odisha">Odisha</option>
+                                                    <option value="Punjab">Punjab</option>
+                                                    <option value="Rajasthan">Rajasthan</option>
+                                                    <option value="Sikkim">Sikkim</option>
+                                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                                    <option value="Telangana">Telangana</option>
+                                                    <option value="Tripura">Tripura</option>
+                                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                    <option value="Uttarakhand">Uttarakhand</option>
+                                                    <option value="West Bengal">West Bengal</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Address</label>
+                                                <textarea class="form-control" name="manualApplicant[0][address]"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeManualApplicant(this)" style="display: none;">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addManualApplicant()">Add Another Applicant</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Details Section -->
+            <div class="form-section">
+                <h2 class="section-title">Application Details</h2>
+                <div class="mb-3">
+                    <label class="form-label">Title of Invention</label>
+                    <input type="text" class="form-control" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Sheet Counts</label>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Patent Document Sheets</label>
+                            <input type="number" class="form-control" name="sheetCounts[patentDocumentSheets]" required min="1">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Abstract Sheets</label>
+                            <input type="number" class="form-control" name="sheetCounts[abstractSheets]" required min="1">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Claims Sheets</label>
+                            <input type="number" class="form-control" name="sheetCounts[claimsSheets]" required min="1">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Drawing Sheets</label>
+                            <input type="number" class="form-control" name="sheetCounts[drawingSheets]" required min="1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Number of Claims</label>
+                            <input type="number" class="form-control" name="noOfClaims" required min="1" onchange="updateFees()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Publication and Examination Preferences -->
+            <div class="form-section" id="completeOptions" style="display: none;">
+                <h2 class="section-title">Publication & Examination Preferences</h2>
+                <div class="mb-3">
+                    <label class="form-label">Publication Preference</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="publicationPreference" value="Ordinary" onchange="updateFees()">
+                        <label class="form-check-label">Ordinary</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="publicationPreference" value="Early" onchange="updateFees()">
+                        <label class="form-check-label">Early</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Examination Preference</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="examinationPreference" value="Ordinary" onchange="updateFees()">
+                        <label class="form-check-label">Ordinary</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="examinationPreference" value="Expedited" onchange="updateFees()">
+                        <label class="form-check-label">Expedited</label>
+                    </div>
+                </div>
+                <div id="expeditedEligibility" style="display: none;">
+                    <div class="alert alert-info">
+                        <h5>Expedited Examination Eligibility</h5>
+                        <p>You are eligible for expedited examination if you meet any of the following criteria:</p>
+                        <ul>
+                            <li>Startup</li>
+                            <li>Small Entity</li>
+                            <li>Female Applicant</li>
+                            <li>Government Department</li>
+                            <li>Institute established by Government</li>
+                            <li>Government Company</li>
+                            <li>Institution wholly or substantially financed by Government</li>
+                            <li>Applicant from a country that provides similar facility to Indian applicants</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fee Display Section -->
+            <div class="form-section">
+                <h2 class="section-title">Fee Details</h2>
+                <div class="fee-display">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5>Filing Fee</h5>
+                            <p id="filingFee">₹0</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Publication Fee</h5>
+                            <p id="publicationFee">₹0</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Examination Fee</h5>
+                            <p id="examinationFee">₹0</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h5>Excess Sheet Fee</h5>
+                            <p id="excessSheetFee">₹0</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Excess Claim Fee</h5>
+                            <p id="excessClaimFee">₹0</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h5>Total Fee</h5>
+                            <p id="totalFee">₹0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Details Section -->
+            <div class="form-section">
+                <h2 class="section-title">Agent Details</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">INPA Number</label>
+                        <input type="text" class="form-control" name="agent[inpaNo]" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Agent Name</label>
+                        <input type="text" class="form-control" name="agent[agentName]" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Mobile</label>
+                        <input type="tel" class="form-control" name="agent[agentMobile]" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="agent[agentEmail]" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address for Service Section -->
+            <div class="form-section">
+                <h2 class="section-title">Address for Service in India</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Service Name</label>
+                        <input type="text" class="form-control" name="serviceAddress[serviceName]" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Postal Address</label>
+                        <textarea class="form-control" name="serviceAddress[postalAddress]" required></textarea>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Telephone</label>
+                        <input type="tel" class="form-control" name="serviceAddress[telephone]">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Mobile</label>
+                        <input type="tel" class="form-control" name="serviceAddress[mobile]" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Fax</label>
+                        <input type="tel" class="form-control" name="serviceAddress[fax]">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="serviceAddress[email]" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Submit Application</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let inventorCount = 1;
+        let applicantCount = 1;
+        let manualApplicantCount = 1;
+        let inventorApplicantCount = 1;
+
+        function addInventor() {
+            const inventorsList = document.getElementById('inventorsList');
+            const newInventor = document.createElement('div');
+            newInventor.className = 'inventor-entry';
+            newInventor.innerHTML = `
+                <div class="row">
+                    <div class="col-md-11">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="inventors[${inventorCount}][name]" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select" name="inventors[${inventorCount}][gender]" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Others">Others</option>
+                            <option value="Prefer not to disclose">Prefer not to disclose</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nationality</label>
+                        <select class="form-select" name="inventors[${inventorCount}][nationality]" required>
+                            <option value="">Select Nationality</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Residency</label>
+                        <select class="form-select" name="inventors[${inventorCount}][residency]" required onchange="toggleStateField(${inventorCount}, this.value)">
+                            <option value="">Select Residency</option>
+                            <option value="India">India</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3" id="stateField${inventorCount}" style="display: none;">
+                        <label class="form-label">State</label>
+                        <select class="form-select" name="inventors[${inventorCount}][state]">
+                            <option value="">Select State</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" name="inventors[${inventorCount}][address]" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeInventor(this)">Remove</button>
+                    </div>
+                </div>
+            `;
+            inventorsList.appendChild(newInventor);
+            inventorCount++;
+        }
+
+        function toggleStateField(index, value) {
+            const stateField = document.getElementById(`stateField${index}`);
+            stateField.style.display = value === 'India' ? 'block' : 'none';
+        }
+
+        function removeInventor(button) {
+            const inventorsList = document.getElementById('inventorsList');
+            const inventorEntries = inventorsList.getElementsByClassName('inventor-entry');
+            
+            // Don't allow removal if it's the only inventor
+            if (inventorEntries.length <= 1) {
+                alert('At least one inventor is required');
+                return;
+            }
+            
+            const inventorEntry = button.closest('.inventor-entry');
+            inventorEntry.remove();
+            
+            // Update inventor selects if inventor applicant form is visible
+            if (document.querySelector('input[name="applicantType"]:checked')?.value === 'inventor') {
+                updateInventorSelects();
+            }
+        }
+
+        function addApplicant() {
+            const applicantsList = document.getElementById('applicantsList');
+            const newApplicant = document.createElement('div');
+            newApplicant.className = 'applicant-entry';
+            newApplicant.innerHTML = `
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="preConfiguredApplicant[${applicantCount}][name]">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" name="preConfiguredApplicant[${applicantCount}][category]" onchange="updateFees()">
+                                    <option value="">Select Category</option>
+                                    <option value="Human">Human</option>
+                                    <option value="Startup">Startup</option>
+                                    <option value="Small">Small</option>
+                                    <option value="Large">Large</option>
+                                    <option value="Education Institute">Education Institute</option>
+                                    <option value="Govt Entity">Govt Entity</option>
+                                    <option value="Woman">Woman</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" name="preConfiguredApplicant[${applicantCount}][address]"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeApplicant(this)">Remove</button>
+                    </div>
+                </div>
+            `;
+            applicantsList.appendChild(newApplicant);
+            applicantCount++;
+        }
+
+        function removeApplicant(button) {
+            const applicantEntry = button.closest('.applicant-entry');
+            applicantEntry.remove();
+            updateFees();
+        }
+
+        function addManualApplicant() {
+            const applicantsList = document.getElementById('manualApplicantsList');
+            const newApplicant = document.createElement('div');
+            newApplicant.className = 'applicant-entry';
+            newApplicant.innerHTML = `
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="manualApplicant[${manualApplicantCount}][name]" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" name="manualApplicant[${manualApplicantCount}][category]" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Natural Person">Natural Person</option>
+                                    <option value="Small Entity">Small Entity</option>
+                                    <option value="Start-Up">Start-Up</option>
+                                    <option value="Educational institution">Educational institution</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nationality</label>
+                                <select class="form-select" name="manualApplicant[${manualApplicantCount}][nationality]" required>
+                                    <option value="">Select Nationality</option>
+                                    <option value="Indian">Indian</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Residency</label>
+                                <select class="form-select" name="manualApplicant[${manualApplicantCount}][residency]" required onchange="toggleApplicantStateField(${manualApplicantCount}, this.value)">
+                                    <option value="">Select Residency</option>
+                                    <option value="India">India</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3" id="applicantStateField${manualApplicantCount}" style="display: none;">
+                                <label class="form-label">State</label>
+                                <select class="form-select" name="manualApplicant[${manualApplicantCount}][state]">
+                                    <option value="">Select State</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Tripura">Tripura</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" name="manualApplicant[${manualApplicantCount}][address]" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeManualApplicant(this)">Remove</button>
+                    </div>
+                </div>
+            `;
+            applicantsList.appendChild(newApplicant);
+            manualApplicantCount++;
+        }
+
+        function removeManualApplicant(button) {
+            const applicantEntry = button.closest('.applicant-entry');
+            applicantEntry.remove();
+            updateFees();
+        }
+
+        function toggleApplicantStateField(index, value) {
+            const stateField = document.getElementById(`applicantStateField${index}`);
+            const stateSelect = stateField.querySelector('select');
+            if (value === 'India') {
+                stateField.style.display = 'block';
+                stateSelect.setAttribute('required', 'required');
+            } else {
+                stateField.style.display = 'none';
+                stateSelect.removeAttribute('required');
+                stateSelect.value = ''; // Clear the value when hidden
+            }
+        }
+
+        // Show/hide provisional details based on application type
+        document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const conventionDetails = document.getElementById('conventionDetails');
+                const pctDetails = document.getElementById('pctDetails');
+                const divisionalDetails = document.getElementById('divisionalDetails');
+                const additionDetails = document.getElementById('additionDetails');
+                const subOptions = document.getElementById('subOptions');
+                
+                // Hide all sections first
+                conventionDetails.style.display = 'none';
+                pctDetails.style.display = 'none';
+                divisionalDetails.style.display = 'none';
+                additionDetails.style.display = 'none';
+                subOptions.style.display = 'none';
+                
+                // Clear sub-option selections
+                document.querySelectorAll('input[name="subOption"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // Show relevant section based on selection
+                switch(this.value) {
+                    case 'Ordinary':
+                    case 'Convention':
+                    case 'PCT-NP':
+                        subOptions.style.display = 'block';
+                        break;
+                    case 'PPH':
+                        // PPH doesn't show sub-options
+                        break;
+                }
+                
+                // Show specific details sections based on application type
+                switch(this.value) {
+                    case 'Convention':
+                        conventionDetails.style.display = 'block';
+                        break;
+                    case 'PCT-NP':
+                        pctDetails.style.display = 'block';
+                        break;
+                }
+            });
+        });
+
+        // Show/hide details based on sub-options
+        document.querySelectorAll('input[name="subOption"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const divisionalDetails = document.getElementById('divisionalDetails');
+                const additionDetails = document.getElementById('additionDetails');
+                
+                // Hide all sub-option details first
+                divisionalDetails.style.display = 'none';
+                additionDetails.style.display = 'none';
+                
+                // Show relevant section based on selection
+                switch(this.value) {
+                    case 'divisional':
+                        divisionalDetails.style.display = 'block';
+                        break;
+                    case 'addition':
+                        additionDetails.style.display = 'block';
+                        break;
+                }
+            });
+        });
+
+        // Show/hide provisional number based on previous filing
+        document.querySelectorAll('input[name="previousProvisionalFiled"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const provisionalNumber = document.getElementById('provisionalNumber');
+                provisionalNumber.style.display = this.value === 'Yes' ? 'block' : 'none';
+            });
+        });
+
+        // Show/hide pre-configured applicant form
+        document.querySelectorAll('input[name="preConfigureApplicant"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const preConfiguredForm = document.getElementById('preConfiguredApplicantForm');
+                const manualForm = document.getElementById('manualApplicantForm');
+                if (this.value === 'Yes') {
+                    preConfiguredForm.style.display = 'block';
+                    manualForm.style.display = 'none';
+                } else {
+                    preConfiguredForm.style.display = 'none';
+                    manualForm.style.display = 'block';
+                }
+            });
+        });
+
+        // Show/hide expedited examination eligibility
+        document.querySelectorAll('input[name="examinationPreference"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const expeditedEligibility = document.getElementById('expeditedEligibility');
+                expeditedEligibility.style.display = this.value === 'Expedited' ? 'block' : 'none';
+            });
+        });
+
+        function toggleApplicantType(type) {
+            const inventorForm = document.getElementById('inventorApplicantForm');
+            const manualForm = document.getElementById('manualApplicantFormFields');
+            
+            if (type === 'inventor') {
+                inventorForm.style.display = 'block';
+                manualForm.style.display = 'none';
+                // Remove required attributes from manual form fields
+                document.querySelectorAll('#manualApplicantFormFields input, #manualApplicantFormFields select, #manualApplicantFormFields textarea').forEach(field => {
+                    field.removeAttribute('required');
+                });
+                updateInventorSelects();
+            } else {
+                inventorForm.style.display = 'none';
+                manualForm.style.display = 'block';
+                // Add required attributes to manual form fields
+                document.querySelectorAll('#manualApplicantFormFields input, #manualApplicantFormFields select, #manualApplicantFormFields textarea').forEach(field => {
+                    if (field.name && field.name.includes('manualApplicant')) {
+                        field.setAttribute('required', 'required');
+                    }
+                });
+            }
+        }
+
+        function updateInventorSelects() {
+            const inventorSelects = document.querySelectorAll('.inventor-select');
+            const selectedInventors = new Set();
+            
+            // Get all currently selected inventors
+            inventorSelects.forEach(select => {
+                if (select.value !== '') {
+                    selectedInventors.add(select.value);
+                }
+            });
+            
+            inventorSelects.forEach(select => {
+                const currentValue = select.value;
+                // Clear existing options except the first one
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                // Add options for each inventor that hasn't been selected
+                let i = 0;
+                while (document.querySelector(`input[name="inventors[${i}][name]"]`)) {
+                    const name = document.querySelector(`input[name="inventors[${i}][name]"]`).value;
+                    if (name && (i.toString() === currentValue || !selectedInventors.has(i.toString()))) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = name;
+                        select.appendChild(option);
+                    }
+                    i++;
+                }
+                
+                // Restore the current value if it was set
+                if (currentValue !== '') {
+                    select.value = currentValue;
+                }
+            });
+        }
+
+        function switchToManualEntry() {
+            // Get the current inventor applicant form
+            const inventorForm = document.getElementById('inventorApplicantForm');
+            const manualForm = document.getElementById('manualApplicantFormFields');
+            
+            // Store the current inventor applicant details
+            const inventorApplicantsList = document.getElementById('inventorApplicantsList');
+            const currentInventorApplicants = Array.from(inventorApplicantsList.getElementsByClassName('applicant-entry')).map(entry => {
+                return {
+                    name: entry.querySelector('input[name^="inventorApplicant"][name$="[name]"]').value,
+                    category: entry.querySelector('input[name^="inventorApplicant"][name$="[category]"]').value,
+                    nationality: entry.querySelector('input[name^="inventorApplicant"][name$="[nationality]"]').value,
+                    residency: entry.querySelector('input[name^="inventorApplicant"][name$="[residency]"]').value,
+                    state: entry.querySelector('input[name^="inventorApplicant"][name$="[state]"]').value,
+                    address: entry.querySelector('textarea[name^="inventorApplicant"][name$="[address]"]').value
+                };
+            });
+
+            // Show manual applicant form
+            manualForm.style.display = 'block';
+            
+            // Add required attributes to manual form fields
+            document.querySelectorAll('#manualApplicantFormFields input, #manualApplicantFormFields select, #manualApplicantFormFields textarea').forEach(field => {
+                if (field.name && field.name.includes('manualApplicant')) {
+                    field.setAttribute('required', 'required');
+                }
+            });
+
+            // Switch radio button to manual
+            document.querySelector('input[name="applicantType"][value="manual"]').checked = true;
+
+            // Add a new manual applicant
+            addManualApplicant();
+
+            // Update fees
+            updateFees();
+        }
+
+        function populateInventorDetails(select, index) {
+            const inventorIndex = select.value;
+            if (inventorIndex === '') return;
+
+            const entry = select.closest('.applicant-entry');
+            entry.querySelector(`input[name="inventorApplicant[${index}][name]"]`).value = 
+                document.querySelector(`input[name="inventors[${inventorIndex}][name]"]`).value;
+            entry.querySelector(`input[name="inventorApplicant[${index}][nationality]"]`).value = 
+                document.querySelector(`select[name="inventors[${inventorIndex}][nationality]"]`).value;
+            entry.querySelector(`input[name="inventorApplicant[${index}][residency]"]`).value = 
+                document.querySelector(`select[name="inventors[${inventorIndex}][residency]"]`).value;
+            entry.querySelector(`textarea[name="inventorApplicant[${index}][address]"]`).value = 
+                document.querySelector(`textarea[name="inventors[${inventorIndex}][address]"]`).value;
+
+            const stateField = entry.querySelector(`#inventorApplicantStateField${index}`);
+            const stateInput = entry.querySelector(`input[name="inventorApplicant[${index}][state]"]`);
+            if (document.querySelector(`select[name="inventors[${inventorIndex}][residency]"]`).value === 'India') {
+                stateField.style.display = 'block';
+                stateInput.value = document.querySelector(`select[name="inventors[${inventorIndex}][state]"]`).value;
+            } else {
+                stateField.style.display = 'none';
+                stateInput.value = '';
+            }
+        }
+
+        function addInventorApplicant() {
+            const applicantsList = document.getElementById('inventorApplicantsList');
+            const newApplicant = document.createElement('div');
+            newApplicant.className = 'applicant-entry';
+            newApplicant.innerHTML = `
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Select Inventor</label>
+                                <select class="form-select inventor-select" name="inventorApplicant[${inventorApplicantCount}][inventor]" required onchange="populateInventorDetails(this, ${inventorApplicantCount})">
+                                    <option value="">Select Inventor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <input type="text" class="form-control" name="inventorApplicant[${inventorApplicantCount}][category]" value="Human" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="inventorApplicant[${inventorApplicantCount}][name]" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nationality</label>
+                                <input type="text" class="form-control" name="inventorApplicant[${inventorApplicantCount}][nationality]" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Residency</label>
+                                <input type="text" class="form-control" name="inventorApplicant[${inventorApplicantCount}][residency]" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3" id="inventorApplicantStateField${inventorApplicantCount}" style="display: none;">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" name="inventorApplicant[${inventorApplicantCount}][state]" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" name="inventorApplicant[${inventorApplicantCount}][address]" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeInventorApplicant(this)">Remove</button>
+                    </div>
+                </div>
+            `;
+            applicantsList.appendChild(newApplicant);
+            updateInventorSelects();
+            inventorApplicantCount++;
+        }
+
+        function removeInventorApplicant(button) {
+            const applicantEntry = button.closest('.applicant-entry');
+            applicantEntry.remove();
+            updateInventorSelects();
+            updateFees();
+        }
+
+        function updateFees() {
+            const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value;
+            const publicationPreference = document.querySelector('input[name="publicationPreference"]:checked')?.value;
+            const examinationPreference = document.querySelector('input[name="examinationPreference"]:checked')?.value;
+            
+            // Get all applicant categories (pre-configured, manual, and inventor)
+            const applicantCategories = [];
+            
+            // Check pre-configured applicants
+            let i = 0;
+            while (document.querySelector(`select[name="preConfiguredApplicant[${i}][category]"]`)) {
+                const category = document.querySelector(`select[name="preConfiguredApplicant[${i}][category]"]`).value;
+                if (category) {
+                    applicantCategories.push(category);
+                }
+                i++;
+            }
+            
+            // Check manual applicants
+            i = 0;
+            while (document.querySelector(`select[name="manualApplicant[${i}][category]"]`)) {
+                const category = document.querySelector(`select[name="manualApplicant[${i}][category]"]`).value;
+                if (category) {
+                    applicantCategories.push(category);
+                }
+                i++;
+            }
+            
+            // Check inventor applicants
+            i = 0;
+            while (document.querySelector(`select[name="inventorApplicant[${i}][category]"]`)) {
+                const category = document.querySelector(`select[name="inventorApplicant[${i}][category]"]`).value;
+                if (category) {
+                    applicantCategories.push(category);
+                }
+                i++;
+            }
+            
+            // Calculate total sheets
+            const totalSheets = (
+                parseInt(document.querySelector('input[name="sheetCounts[patentDocumentSheets]"]').value || 0) +
+                parseInt(document.querySelector('input[name="sheetCounts[abstractSheets]"]').value || 0) +
+                parseInt(document.querySelector('input[name="sheetCounts[claimsSheets]"]').value || 0) +
+                parseInt(document.querySelector('input[name="sheetCounts[drawingSheets]"]').value || 0)
+            );
+            
+            // Calculate excess sheet fee
+            const excessSheetFee = totalSheets > 30 ? (totalSheets - 30) * 160 : 0;
+            
+            // Calculate excess claim fee
+            const noOfClaims = parseInt(document.querySelector('input[name="noOfClaims"]').value || 0);
+            const excessClaimFee = noOfClaims > 10 ? (noOfClaims - 10) * 800 : 0;
+
+            let filingFee = 0;
+            let publicationFee = 0;
+            let examinationFee = 0;
+
+            // Base filing fee
+            if (applicationType === 'Provisional') {
+                filingFee = 1600;
+            } else {
+                filingFee = 8000;
+            }
+
+            // Publication fee
+            if (applicationType === 'Complete' && publicationPreference === 'Early') {
+                publicationFee = 2500;
+            }
+
+            // Examination fee
+            if (applicationType === 'Complete') {
+                examinationFee = examinationPreference === 'Expedited' ? 12000 : 4000;
+            }
+
+            // Apply category-based discounts
+            if (applicantCategories.includes('Startup')) {
+                filingFee *= 0.8;
+                publicationFee *= 0.8;
+                examinationFee *= 0.8;
+                excessSheetFee *= 0.8;
+                excessClaimFee *= 0.8;
+            } else if (applicantCategories.includes('Small')) {
+                filingFee *= 0.9;
+                publicationFee *= 0.9;
+                examinationFee *= 0.9;
+                excessSheetFee *= 0.9;
+                excessClaimFee *= 0.9;
+            }
+
+            // Update fee display
+            document.getElementById('filingFee').textContent = `₹${filingFee.toFixed(2)}`;
+            document.getElementById('publicationFee').textContent = `₹${publicationFee.toFixed(2)}`;
+            document.getElementById('examinationFee').textContent = `₹${examinationFee.toFixed(2)}`;
+            document.getElementById('excessSheetFee').textContent = `₹${excessSheetFee.toFixed(2)}`;
+            document.getElementById('excessClaimFee').textContent = `₹${excessClaimFee.toFixed(2)}`;
+            document.getElementById('totalFee').textContent = `₹${(filingFee + publicationFee + examinationFee + excessSheetFee + excessClaimFee).toFixed(2)}`;
+        }
+
+        // Add event listeners for sheet count changes
+        document.querySelectorAll('input[name^="sheetCounts"]').forEach(input => {
+            input.addEventListener('change', updateFees);
+            input.addEventListener('input', updateFees);
+        });
+
+        // Initialize fees on page load
+        document.addEventListener('DOMContentLoaded', updateFees);
+
+        // Add event listener to update inventor selects when inventors are added/removed
+        document.getElementById('inventorsList').addEventListener('change', function() {
+            if (document.querySelector('input[name="applicantType"]:checked')?.value === 'inventor') {
+                updateInventorSelects();
+            }
+        });
+
+        document.getElementById('patentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Hide any previous error messages
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+            
+            // Remove required attributes from hidden fields
+            document.querySelectorAll('input, select, textarea').forEach(field => {
+                if (field.closest('div[style*="display: none"]')) {
+                    field.removeAttribute('required');
+                }
+            });
+            
+            // Validate at least one inventor
+            const inventorsList = document.getElementById('inventorsList');
+            const inventorEntries = inventorsList.getElementsByClassName('inventor-entry');
+            if (inventorEntries.length === 0) {
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = 'At least one inventor is required';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Validate at least one applicant
+            let hasApplicant = false;
+            if (document.querySelector('input[name="preConfigureApplicant"]:checked')?.value === 'Yes') {
+                const preConfiguredApplicants = document.querySelectorAll('input[name^="preConfiguredApplicant"][name$="[name]"]');
+                hasApplicant = Array.from(preConfiguredApplicants).some(input => input.value.trim() !== '');
+            } else {
+                const inventorApplicants = document.querySelectorAll('select[name^="inventorApplicant"][name$="[inventor]"]');
+                const manualApplicants = document.querySelectorAll('input[name^="manualApplicant"][name$="[name]"]');
+                hasApplicant = Array.from(inventorApplicants).some(select => select.value !== '') ||
+                              Array.from(manualApplicants).some(input => input.value.trim() !== '');
+            }
+            
+            if (!hasApplicant) {
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = 'At least one applicant is required';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Validate form before submission
+            if (!this.checkValidity()) {
+                // Trigger browser's native validation
+                this.reportValidity();
+                return;
+            }
+            
+            const formData = new FormData(this);
+            
+            // Show loading state
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Generating Document...';
+            
+            // Log form data for debugging
+            console.log('Submitting form data:');
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+            
+            fetch('/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Failed to generate document');
+                    });
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create a download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'patent_application.docx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+                
+                // Show success message
+                errorDiv.className = 'alert alert-success';
+                errorDiv.textContent = 'Document generated successfully!';
+                errorDiv.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+                
+                // Scroll to error message
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            })
+            .finally(() => {
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+            });
+        });
+
+        // Initialize the form when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial state of form fields
+            const manualForm = document.getElementById('manualApplicantFormFields');
+            if (manualForm.style.display === 'none') {
+                document.querySelectorAll('#manualApplicantFormFields input, #manualApplicantFormFields select, #manualApplicantFormFields textarea').forEach(field => {
+                    field.removeAttribute('required');
+                });
+            }
+            
+            // Add event listener for pre-configured applicant radio buttons
+            document.querySelectorAll('input[name="preConfigureApplicant"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const preConfiguredForm = document.getElementById('preConfiguredApplicantForm');
+                    const manualForm = document.getElementById('manualApplicantForm');
+                    if (this.value === 'Yes') {
+                        preConfiguredForm.style.display = 'block';
+                        manualForm.style.display = 'none';
+                        // Remove required attributes from manual form fields
+                        document.querySelectorAll('#manualApplicantFormFields input, #manualApplicantFormFields select, #manualApplicantFormFields textarea').forEach(field => {
+                            field.removeAttribute('required');
+                        });
+                    } else {
+                        preConfiguredForm.style.display = 'none';
+                        manualForm.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Ensure the first inventor's remove button is hidden
+            const firstInventorEntry = document.querySelector('.inventor-entry');
+            if (firstInventorEntry) {
+                const removeButton = firstInventorEntry.querySelector('.btn-danger');
+                if (removeButton) {
+                    removeButton.style.display = 'none';
+                }
+            }
+        });
+
+        // Add event listeners for application type to show/hide relevant sections
+        document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const conventionDetails = document.getElementById('conventionDetails');
+                const pctDetails = document.getElementById('pctDetails');
+                const divisionalDetails = document.getElementById('divisionalDetails');
+                const additionDetails = document.getElementById('additionDetails');
+                
+                // Hide all sections first
+                conventionDetails.style.display = 'none';
+                pctDetails.style.display = 'none';
+                divisionalDetails.style.display = 'none';
+                additionDetails.style.display = 'none';
+                
+                // Show relevant section based on selection
+                switch(this.value) {
+                    case 'Convention':
+                        conventionDetails.style.display = 'block';
+                        break;
+                    case 'PCT-NP':
+                        pctDetails.style.display = 'block';
+                        break;
+                    case 'Divisional':
+                        divisionalDetails.style.display = 'block';
+                        break;
+                    case 'Patent of Addition':
+                        additionDetails.style.display = 'block';
+                        break;
+                }
+            });
+        });
+
+        // Add event listeners for sub-options
+        document.querySelector('input[name="isDivisional"]').addEventListener('change', function() {
+            const divisionalDetails = document.getElementById('divisionalDetails');
+            divisionalDetails.style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.querySelector('input[name="isPatentOfAddition"]').addEventListener('change', function() {
+            const additionDetails = document.getElementById('additionDetails');
+            additionDetails.style.display = this.checked ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html> 

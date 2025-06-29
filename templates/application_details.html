@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .fee-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+        }
+        .fee-amount {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Application Details</h2>
+        
+        <form id="applicationDetailsForm" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Sheet Counts</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="patentDocument" class="form-label">Patent Document Sheets</label>
+                                <input type="number" class="form-control" id="patentDocument" name="patentDocument" min="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="abstract" class="form-label">Abstract Sheets</label>
+                                <input type="number" class="form-control" id="abstract" name="abstract" min="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="claims" class="form-label">Claims Sheets</label>
+                                <input type="number" class="form-control" id="claims" name="claims" min="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="drawingSheets" class="form-label">Drawing Sheets</label>
+                                <input type="number" class="form-control" id="drawingSheets" name="drawingSheets" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Other Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="noOfClaims" class="form-label">Number of Claims</label>
+                                <input type="number" class="form-control" id="noOfClaims" name="noOfClaims" min="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="noOfDrawings" class="form-label">Number of Drawings</label>
+                                <input type="number" class="form-control" id="noOfDrawings" name="noOfDrawings" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="fee-card">
+                        <h5>Excess Sheet Fee</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>Online Filing:</p>
+                                <p class="fee-amount" id="excessSheetFeeOnline">₹0</p>
+                            </div>
+                            <div class="col-6">
+                                <p>Offline Filing:</p>
+                                <p class="fee-amount" id="excessSheetFeeOffline">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="fee-card">
+                        <h5>Excess Claim Fee</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>Online Filing:</p>
+                                <p class="fee-amount" id="excessClaimFeeOnline">₹0</p>
+                            </div>
+                            <div class="col-6">
+                                <p>Offline Filing:</p>
+                                <p class="fee-amount" id="excessClaimFeeOffline">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Calculate Fees</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('applicationDetailsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const formData = {
+                sheetCounts: {
+                    patentDocument: parseInt(document.getElementById('patentDocument').value) || 0,
+                    abstract: parseInt(document.getElementById('abstract').value) || 0,
+                    claims: parseInt(document.getElementById('claims').value) || 0,
+                    drawingSheets: parseInt(document.getElementById('drawingSheets').value) || 0
+                },
+                others: {
+                    noOfClaims: parseInt(document.getElementById('noOfClaims').value) || 0,
+                    noOfDrawings: parseInt(document.getElementById('noOfDrawings').value) || 0
+                }
+            };
+
+            // Calculate total sheets
+            const totalSheets = Object.values(formData.sheetCounts).reduce((a, b) => a + b, 0);
+            
+            // Calculate excess sheet fee
+            let excessSheetFee = 0;
+            if (totalSheets > 30) {
+                excessSheetFee = (totalSheets - 30) * 160; // ₹160 per excess sheet
+            }
+            
+            // Calculate excess claim fee
+            let excessClaimFee = 0;
+            if (formData.others.noOfClaims > 10) {
+                excessClaimFee = (formData.others.noOfClaims - 10) * 800; // ₹800 per excess claim
+            }
+
+            // Update fee displays
+            document.getElementById('excessSheetFeeOnline').textContent = `₹${excessSheetFee}`;
+            document.getElementById('excessSheetFeeOffline').textContent = `₹${excessSheetFee * 1.1}`; // 10% more for offline
+            document.getElementById('excessClaimFeeOnline').textContent = `₹${excessClaimFee}`;
+            document.getElementById('excessClaimFeeOffline').textContent = `₹${excessClaimFee * 1.1}`; // 10% more for offline
+        });
+    </script>
+</body>
+</html> 
