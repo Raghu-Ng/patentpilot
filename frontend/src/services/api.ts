@@ -53,7 +53,8 @@ export const draftApi = {
   // Generate AI content for a section
   generateSection: async (draftId: string, section: string): Promise<ApiResponse<{ content: string; section: string }>> => {
     try {
-      const response = await api.post(`/${draftId}/generate/${section}`);
+      // Always send an empty object to ensure Content-Type: application/json
+      const response = await api.post(`/${draftId}/generate/${section}`, {});
       return response.data;
     } catch (error: any) {
       return {
