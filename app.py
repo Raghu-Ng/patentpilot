@@ -3,8 +3,31 @@ from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
 import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Import drafting module components
+from database import init_database, create_indexes
+from drafting_routes import drafting_bp
+from config import config
 
 app = Flask(__name__)
+
+# Configure the app
+config_name = os.getenv('FLASK_CONFIG', 'default')
+app.config.from_object(config[config_name])
+
+# Initialize database
+init_database(app)
+
+# Register blueprints
+app.register_blueprint(drafting_bp)
+
+# Create database indexes
+with app.app_context():
+    create_indexes()
 
 # Priority for deciding main entity (higher means higher fee)
 CATEGORY_PRIORITY = {
@@ -200,166 +223,69 @@ def generate_document(form_data):
             'inventor': inventors[0] if inventors else default_inventor,  # Use default if no inventors
             'applicants': applicants,
             'applicant': applicants[0] if applicants else default_applicant,  # Use default if no applicants
-            'main_applicant_category': main_applicant_category,
-            'is_expedited_allowed': is_expedited,
-            'expedited_reason': expedited_reason,
-            'title': form_data.get('title', ''),
-            'noOfClaims': form_data.get('noOfClaims', '0'),
-            'noOfDrawings': form_data.get('noOfDrawings', '0'),
-            'sheet_counts': {
-                'patent_document': form_data.get('sheetCounts[patentDocumentSheets]', '0'),
-                'abstract': form_data.get('sheetCounts[abstractSheets]', '0'),
-                'claims': form_data.get('sheetCounts[claimsSheets]', '0'),
-                'drawings': form_data.get('sheetCounts[drawingSheets]', '0')
-            },
-            'publication_preference': form_data.get('publicationPreference', 'Ordinary'),
-            'examination_preference': form_data.get('examinationPreference', 'Ordinary'),
             'agents': agents,
-            'agent1_no': agents[0]['inpa_no'] if len(agents) > 0 else '',
-            'agent1_name': agents[0]['name'] if len(agents) > 0 else '',
-            'agent1_mobile': agents[0]['mobile'] if len(agents) > 0 else '',
-            'agent2_no': agents[1]['inpa_no'] if len(agents) > 1 else '',
-            'agent2_name': agents[1]['name'] if len(agents) > 1 else '',
-            'agent2_mobile': agents[1]['mobile'] if len(agents) > 1 else '',
+            'agent': agents[0] if agents else {'inpa_no': '', 'name': '', 'mobile': '', 'email': ''},
+            'main_applicant_category': main_applicant_category,
+            'is_expedited': is_expedited,
+            'expedited_reason': expedited_reason,
             'fees': fees,
             'total_fee': sum(fees.values()),
-            'date': datetime.now().strftime("%d/%m/%Y"),
-            # Only keep checkboxes for Provisional/Complete
-            'cb_type_provisional': get_checkbox_symbol(application_type == 'Provisional'),
-            'cb_type_complete': get_checkbox_symbol(application_type == 'Complete'),
-            # Category of Applicant checkboxes based on the main category
-            'cb_category_natural': get_checkbox_symbol(main_applicant_category == 'Natural Person'),
-            'cb_category_small': get_checkbox_symbol(main_applicant_category == 'Small Entity'),
-            'cb_category_startup': get_checkbox_symbol(main_applicant_category == 'Start-Up'),
-            'cb_category_others': get_checkbox_symbol(main_applicant_category == 'Others'),
-            'cb_category_educational': get_checkbox_symbol(main_applicant_category == 'Educational institution'),
-            
-            # Inventors same as applicants
-            'cb_inventors_same_yes': get_checkbox_symbol(form_data.get('inventorsSameAsApplicants') == 'Yes'),
-            'cb_inventors_same_no': get_checkbox_symbol(form_data.get('inventorsSameAsApplicants') == 'No'),
-            
-            # Convention Application Details
-            'convention_country': form_data.get('conventionCountry', ''),
-            'convention_number': form_data.get('conventionNumber', ''),
-            'convention_date': form_data.get('conventionDate', ''),
-            'convention_applicant': form_data.get('conventionApplicant', ''),
-            'convention_title': form_data.get('conventionTitle', ''),
-            'convention_ipc': form_data.get('conventionIPC', ''),
-            
-            # PCT Application Details
-            'pct_number': form_data.get('pctNumber', ''),
-            'pct_date': form_data.get('pctDate', ''),
-            
-            # Divisional Application Details
-            'divisional_number': form_data.get('divisionalNumber', ''),
-            'divisional_date': form_data.get('divisionalDate', ''),
-            
-            # Patent of Addition Details
-            'addition_number': form_data.get('additionNumber', ''),
-            'addition_date': form_data.get('additionDate', ''),
-            
-            'service_address': {
-                'name': form_data.get('serviceAddress[serviceName]', ''),
-                'postal_address': form_data.get('serviceAddress[postalAddress]', ''),
-                'telephone': form_data.get('serviceAddress[telephone]', ''),
-                'mobile': form_data.get('serviceAddress[mobile]', ''),
-                'fax': form_data.get('serviceAddress[fax]', ''),
-                'email': form_data.get('serviceAddress[email]', ''),
-            }
+            'sheet_counts': {
+                'patent_document_sheets': form_data.get('sheetCounts[patentDocumentSheets]', 0),
+                'abstract_sheets': form_data.get('sheetCounts[abstractSheets]', 0),
+                'claims_sheets': form_data.get('sheetCounts[claimsSheets]', 0),
+                'drawing_sheets': form_data.get('sheetCounts[drawingSheets]', 0)
+            },
+            'publication_preference': form_data.get('publicationPreference', ''),
+            'examination_preference': form_data.get('examinationPreference', ''),
+            'checkbox_previous_provisional': get_checkbox_symbol(form_data.get('previousProvisionalFiled') == 'Yes'),
+            'checkbox_publication_early': get_checkbox_symbol(form_data.get('publicationPreference') == 'Early'),
+            'checkbox_examination_expedited': get_checkbox_symbol(form_data.get('examinationPreference') == 'Expedited')
         }
         
-        app.logger.info("Context prepared successfully")
+        app.logger.info("Context built successfully")
         
         # Render the template
-        try:
-            doc.render(context)
-            app.logger.info("Template rendered successfully")
-        except Exception as e:
-            app.logger.error(f"Error rendering template: {str(e)}")
-            raise
+        doc.render(context)
+        app.logger.info("Template rendered successfully")
+        
+        # Generate filename with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"patent_application_{timestamp}.docx"
         
         # Save the document
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"patent_application_{timestamp}.docx"
         doc.save(filename)
         app.logger.info(f"Document saved as {filename}")
         
         return filename
+        
     except Exception as e:
-        app.logger.error(f"Error in generate_document: {str(e)}")
+        app.logger.error(f"Error generating document: {str(e)}")
         raise
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
+@app.route('/drafting', methods=['GET'])
+def drafting():
+    """Route to the AI-powered patent drafting interface"""
+    return render_template('drafting.html')
+
 @app.route('/submit', methods=['POST'])
 def submit():
     try:
         form_data = request.form.to_dict()
-        app.logger.info(f"Received form data: {form_data}")
-
-        # Map 'provisionalOrComplete' to 'applicationType' if 'applicationType' is missing
-        if 'applicationType' not in form_data and 'provisionalOrComplete' in form_data:
-            form_data['applicationType'] = form_data['provisionalOrComplete']
-
-        # Validate required fields
-        required_fields = ['applicationType', 'title']
-        for field in required_fields:
-            if field not in form_data or not form_data[field]:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
-        
-        # Ensure at least one inventor is present
-        if not any(key.startswith('inventors[') for key in form_data.keys()):
-            return jsonify({'error': 'At least one inventor is required'}), 400
-        
-        # Ensure at least one applicant is present
-        has_applicant = False
-        i = 0
-        while f'applicants[{i}][name]' in form_data:
-            if form_data[f'applicants[{i}][name]']:
-                has_applicant = True
-                break
-            i += 1
-        
-        if not has_applicant:
-            return jsonify({'error': 'At least one applicant is required'}), 400
-        
-        # Ensure agent details are present
-        agent_fields = ['agents[0][inpaNo]', 'agents[0][name]', 'agents[0][mobile]', 'agents[0][email]']
-        for field in agent_fields:
-            if field not in form_data or not form_data[field]:
-                return jsonify({'error': f'Missing required agent field: {field}'}), 400
-        
-        # Ensure service address details are present
-        service_fields = ['serviceAddress[serviceName]', 'serviceAddress[postalAddress]', 'serviceAddress[mobile]', 'serviceAddress[email]']
-        for field in service_fields:
-            if field not in form_data or not form_data[field]:
-                return jsonify({'error': f'Missing required service address field: {field}'}), 400
-        
-        # Validate applicant categories
-        allowed_categories = [
-            'Natural Person',
-            'Small Entity',
-            'Start-Up',
-            'Educational institution',
-            'Others'
-        ]
-        for key in form_data:
-            if key.endswith('[category]') and form_data[key] not in allowed_categories and form_data[key] != '':
-                return jsonify({'error': f'Invalid applicant category: {form_data[key]}'}), 400
+        app.logger.info("Form data received")
         
         # Generate the document
-        try:
-            filename = generate_document(form_data)
-            app.logger.info(f"Document generated successfully: {filename}")
-            return send_file(filename, as_attachment=True)
-        except Exception as e:
-            app.logger.error(f"Error generating document: {str(e)}")
-            return jsonify({'error': f'Error generating document: {str(e)}'}), 500
-            
+        filename = generate_document(form_data)
+        
+        # Send the file
+        return send_file(filename, as_attachment=True, download_name=filename)
+        
     except Exception as e:
-        app.logger.error(f"Error processing form submission: {str(e)}")
+        app.logger.error(f"Error in submit: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/application-details', methods=['GET'])
@@ -368,60 +294,39 @@ def application_details():
 
 @app.route('/calculate-fees', methods=['POST'])
 def calculate_fees_api():
-    data = request.get_json()
-    
-    # Calculate total sheets
-    total_sheets = sum(data['sheetCounts'].values())
-    
-    # Calculate excess sheet fee
-    excess_sheet_fee = 0
-    if total_sheets > 30:
-        excess_sheet_fee = (total_sheets - 30) * 160  # ₹160 per excess sheet
-    
-    # Calculate excess claim fee
-    excess_claim_fee = 0
-    if data['others']['noOfClaims'] > 10:
-        excess_claim_fee = (data['others']['noOfClaims'] - 10) * 800  # ₹800 per excess claim
-    
-    return jsonify({
-        'excessSheetFee': {
-            'online': excess_sheet_fee,
-            'offline': int(excess_sheet_fee * 1.1)  # 10% more for offline
-        },
-        'excessClaimFee': {
-            'online': excess_claim_fee,
-            'offline': int(excess_claim_fee * 1.1)  # 10% more for offline
-        }
-    })
+    try:
+        form_data = request.get_json()
+        fees = calculate_fees(form_data)
+        total_fee = sum(fees.values())
+        
+        return jsonify({
+            'fees': fees,
+            'total_fee': total_fee
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 def get_main_applicant_category(applicants):
-    max_priority = 0
-    main_category = None
-    for applicant in applicants:
-        cat = applicant.get("category")
-        priority = CATEGORY_PRIORITY.get(cat, 0)
-        if priority > max_priority:
-            max_priority = priority
-            main_category = cat
-    return main_category
+    """Determine the main applicant category for fee calculation"""
+    if not applicants:
+        return "Others"
+    
+    # Find the applicant with the highest priority (lowest number)
+    main_applicant = min(applicants, key=lambda x: CATEGORY_PRIORITY.get(x.get('category', 'Others'), 5))
+    return main_applicant.get('category', 'Others')
 
 def is_expedited_allowed(applicants):
-    """
-    applicants: List[Dict] -> [{'name': 'A', 'category': 'Start-Up', 'gender': 'Female'}, ...]
-    returns: Tuple[bool, Optional[str]]
-    """
-    for applicant in applicants:
-        category = applicant.get('category')
-        gender = applicant.get('gender', '').lower()
-        # Eligible by category
-        if category in EXPEDITED_ELIGIBLE_CATEGORIES:
-            return True, None
-        # Eligible by gender (if natural person and female)
-        if category == "Natural Person" and gender == "female":
-            return True, None
-    # Not eligible
-    return False, "Expedited examination not available – no eligible applicant (Start-Up, Small Entity, Educational Institution, or Female Natural Person)."
+    """Check if expedited examination is allowed for the applicants"""
+    if not applicants:
+        return False, "No applicants found"
+    
+    # Check if any applicant is eligible for expedited examination
+    eligible_applicants = [app for app in applicants if app.get('category') in EXPEDITED_ELIGIBLE_CATEGORIES]
+    
+    if eligible_applicants:
+        return True, f"Eligible: {', '.join([app.get('category') for app in eligible_applicants])}"
+    else:
+        return False, "No eligible applicants for expedited examination"
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(debug=True) 
